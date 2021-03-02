@@ -17,7 +17,7 @@ variable "name_prefix" {
 
 variable "connection" {
   description = "Provisioner connection settings"
-  type        = object({})
+  type        = map(string)
   sensitive   = true
   default = {
     type  = "ssh"
@@ -98,13 +98,13 @@ variable "server_memory" {
 
 variable "server_disks" {
   description = "VM disk config"
-  type        = list(object({}))
+  type        = list(map(string))
   default     = [{}]
 }
 
 variable "server_networks" {
   description = "VM network adapter config"
-  type        = list(object({}))
+  type        = list(map(string))
   default     = [{}]
 }
 
@@ -137,12 +137,12 @@ variable "agent_memory" {
 
 variable "agent_disks" {
   description = "VM disk config"
-  type        = list(object({}))
+  type        = list(map(string))
   default     = [{}]
 }
 
 variable "agent_networks" {
   description = "VM network adapter config"
-  type        = list(object({}))
+  type        = list(map(string))
   default     = [{}]
 }

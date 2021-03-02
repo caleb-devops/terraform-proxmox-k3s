@@ -5,7 +5,7 @@ output "kubernetes" {
 }
 
 output "kube_config" {
-  description = "Genereated kubeconfig"
+  description = "Generated kubeconfig"
   value       = module.k3s.kube_config
   sensitive   = true
 }
