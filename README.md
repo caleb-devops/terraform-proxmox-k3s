@@ -61,7 +61,6 @@
 | Name | Description |
 |------|-------------|
 | kube\_config | Generated kubeconfig |
-| kubernetes | Authentication credentials of Kubernetes (full administrator) |
 | kubernetes\_ready | Dependency endpoint to synchronize k3s installation and provisioning. |
 | summary | Current state of k3s (version & nodes) |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
