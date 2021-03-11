@@ -1,3 +1,7 @@
+locals {
+  ansible_prefix = replace(var.name_prefix, "-", "_")
+}
+
 module "k3s_server" {
   source = "github.com/caleb-devops/terraform-proxmox-ci-vm"
 
@@ -27,7 +31,7 @@ module "k3s_server" {
 
   connection = var.connection
 
-  ansible_groups = ["${var.name_prefix}-server"]
+  ansible_groups = ["${local.ansible_prefix}_server"]
 }
 
 module "k3s_agent" {
@@ -59,12 +63,12 @@ module "k3s_agent" {
 
   connection = var.connection
 
-  ansible_groups = ["${var.name_prefix}-server"]
+  ansible_groups = ["${local.ansible_prefix}_server"]
 }
 
 resource "ansible_group" "k3s_cluster" {
-  inventory_group_name = "${var.name_prefix}-cluster"
-  children             = ["${var.name_prefix}-server", "${var.name_prefix}-agent"]
+  inventory_group_name = "${local.ansible_prefix}_cluster"
+  children             = ["${local.ansible_prefix}_server", "${local.ansible_prefix}_agent"]
 }
 
 module "k3s" {
@@ -73,7 +77,7 @@ module "k3s" {
 
   source = "github.com/caleb-devops/terraform-module-k3s"
 
-  k3s_version = "latest"
+  k3s_version = var.k3s_version
   name        = var.name_prefix
 
   generate_ca_certificates = true
@@ -87,7 +91,8 @@ module "k3s" {
         user = instance.username
       })
 
-      flags = ["--write-kubeconfig-mode '0644'"]
+      flags  = ["--write-kubeconfig-mode '0644'"]
+      taints = { "node-role.kubernetes.io/master" = "server:NoSchedule" }
     }
   }
 
