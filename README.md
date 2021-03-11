@@ -41,6 +41,7 @@
 | ciuser | Override the default cloud-init user for provisioning | `string` | n/a | yes |
 | clone | The base VM from which to clone to create the new VM | `string` | n/a | yes |
 | connection | Provisioner connection settings | `map(string)` | <pre>{<br>  "agent": true,<br>  "type": "ssh"<br>}</pre> | no |
+| k3s\_version | Specify the k3s version. You can choose from the following release channels or pin the version directly | `string` | `"latest"` | no |
 | name\_prefix | Creates a name beginning with the specified prefix | `string` | n/a | yes |
 | nameserver | Sets default DNS server for guest | `string` | `null` | no |
 | numa | Whether to enable Non-Uniform Memory Access in the guest | `bool` | `false` | no |
@@ -60,7 +61,6 @@
 | Name | Description |
 |------|-------------|
 | kube\_config | Generated kubeconfig |
-| kubernetes | Authentication credentials of Kubernetes (full administrator) |
 | kubernetes\_ready | Dependency endpoint to synchronize k3s installation and provisioning. |
 | summary | Current state of k3s (version & nodes) |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
