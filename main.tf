@@ -1,4 +1,12 @@
 locals {
+  kubeconfig = templatefile("${path.module}/templates/kubeconfig.tpl", {
+    kubeconfig_name        = var.name_prefix
+    api_endpoint           = module.k3s.kubernetes.api_endpoint
+    cluster_ca_certificate = base64encode(module.k3s.kubernetes.cluster_ca_certificate)
+    client_certificate     = base64encode(module.k3s.kubernetes.client_certificate)
+    client_key             = base64encode(module.k3s.kubernetes.client_key)
+  })
+
   ansible_prefix = replace(var.name_prefix, "-", "_")
 }
 
@@ -63,22 +71,14 @@ module "k3s_agent" {
 
   connection = var.connection
 
-  ansible_groups = ["${local.ansible_prefix}_server"]
-}
-
-resource "ansible_group" "k3s_cluster" {
-  inventory_group_name = "${local.ansible_prefix}_cluster"
-  children             = ["${local.ansible_prefix}_server", "${local.ansible_prefix}_agent"]
+  ansible_groups = ["${local.ansible_prefix}_agent"]
 }
 
 module "k3s" {
-  # source  = "xunleii/k3s/module"
-  # version = "~> v2.2.0"
-
-  source = "github.com/caleb-devops/terraform-module-k3s"
+  source  = "xunleii/k3s/module"
+  version = "~> 3.0"
 
   k3s_version = var.k3s_version
-  name        = var.name_prefix
 
   generate_ca_certificates = true
 
@@ -91,7 +91,7 @@ module "k3s" {
         user = instance.username
       })
 
-      flags  = ["--write-kubeconfig-mode '0644'"]
+      flags  = ["--write-kubeconfig-mode '0644'", "--disable traefik"]
       taints = { "node-role.kubernetes.io/master" = "server:NoSchedule" }
     }
   }
@@ -106,4 +106,13 @@ module "k3s" {
       })
     }
   }
+}
+
+resource "local_file" "kubeconfig" {
+  count = var.write_kubeconfig ? 1 : 0
+
+  content              = local.kubeconfig
+  filename             = substr(var.kubeconfig_output_path, -1, 1) == "/" ? "${var.kubeconfig_output_path}kubeconfig_${var.name_prefix}" : var.kubeconfig_output_path
+  file_permission      = var.kubeconfig_file_permission
+  directory_permission = "0755"
 }

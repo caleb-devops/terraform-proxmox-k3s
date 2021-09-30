@@ -3,7 +3,7 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.14 |
+| terraform | ~> 1.0 |
 | proxmox | ~> 2.6.5 |
 
 ## Providers
@@ -32,8 +32,7 @@ No resources.
 
 | Name | Description |
 |------|-------------|
-| kube\_config | Generated kubeconfig |
-| kubernetes | Authentication credentials of Kubernetes (full administrator) |
+| kube\_config | kubectl config file contents |
 | kubernetes\_ready | Dependency endpoint to synchronize k3s installation and provisioning. |
 | summary | Current state of k3s (version & nodes) |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

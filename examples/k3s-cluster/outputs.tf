@@ -1,11 +1,5 @@
-output "kubernetes" {
-  description = "Authentication credentials of Kubernetes (full administrator)"
-  value       = module.k3s_cluster.kubernetes
-  sensitive   = true
-}
-
 output "kube_config" {
-  description = "Generated kubeconfig"
+  description = "kubectl config file contents"
   value       = module.k3s_cluster.kube_config
   sensitive   = true
 }

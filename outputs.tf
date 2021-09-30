@@ -1,6 +1,6 @@
 output "kube_config" {
-  description = "Generated kubeconfig"
-  value       = try(module.k3s.kube_config, null)
+  description = "kubectl config file contents"
+  value       = try(local.kubeconfig, null)
   sensitive   = true
 }
 
